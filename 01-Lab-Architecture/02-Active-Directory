@@ -1,0 +1,16 @@
+ Active Directory Configuration
+
+This section documents the creation and configuration of the Active Directory domain.
+
+Configuration
+- Installed Active Directory Domain Services (AD DS).
+- Promoted DC01 to a domain controller.
+- Created the adlab.test domain.
+- Configured domain and DNS services.
+- Created departmental organisational units.
+- Created domain user accounts.
+- Created departmental security groups.
+- Added users to their respective groups.
+
+ Evidence
+Screenshots of the domain controller, organisational units, user accounts and security groups will be added here.
