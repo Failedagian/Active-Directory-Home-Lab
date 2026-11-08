@@ -64,7 +64,7 @@ Separating the server and client into different virtual machines allows configur
 
 The virtual machines communicate through a VirtualBox Internal Network named `ADLabNet`.
 
-```text
+
                   Oracle VirtualBox
                  Internal Network
                      ADLabNet
@@ -83,7 +83,7 @@ The virtual machines communicate through a VirtualBox Internal Network named `AD
        AD DS / DNS / DHCP
        SMB File Sharing
        Group Policy
-```
+
 
 Both virtual machines belong to the same IPv4 subnet.
 
@@ -129,7 +129,7 @@ Three departmental Organisational Units were created:
 
 Departmental security groups support access management for shared resources.
 
-The Active Directory implementation is documented in [Active Directory Configuration](../02-Active-Directory/README.md).
+The Active Directory implementation is documented in [Active Directory Configuration](../02-Active-Directory%20Configuration/README.md).
 
 ## 5. IP Addressing Design
 
