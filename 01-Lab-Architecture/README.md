@@ -129,7 +129,7 @@ Three departmental Organisational Units were created:
 
 Departmental security groups support access management for shared resources.
 
-The Active Directory implementation is documented in [Active Directory Configuration](../02-Active-Directory%20Configuration/README.md).
+The Active Directory implementation is documented in [Active Directory Configuration](../02-Active-DirectoryConfiguration/README.md).
 
 ## 5. IP Addressing Design
 
