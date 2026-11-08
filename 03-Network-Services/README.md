@@ -204,14 +204,17 @@ The following values must be confirmed from the updated output:
 
 ## 7. Configuration Evidence
 
+## 7. Configuration Evidence
+
 | Screenshot | Description |
 |---|---|
-| 01-DC01-Static-IP.png | Domain controller IP configuration |
-| 02-VirtualBox-Network.png | Internal network adapter settings |
-| 03-DNS-Configuration.png | Active Directory DNS zone |
-| 04-DNS-Test.png | Successful DNS lookup |
-| 05-DHCP-Scope.png | DHCP allocation range |
-| 06-PC01-DHCP-Configuration.png | Windows 10 DHCP client settings |
+| [DC01 Static IP](DC01%20static%20IP%20.png) | Domain controller static IPv4 configuration |
+| [DC01 Network Settings](DCO1%20Net%20settings%20.png) | Virtual network configuration |
+| [DHCP Scope](DHCP%20Scope%20.png) | DHCP address pool and allocation range |
+| [DNS Resolution Test](DNS%20Resolution%20Test.png) | Successful domain DNS lookup |
+| [DNS Zone](DNS%20Zone%20.png) | Active Directory DNS zone |
+| [PC01 DHCP Configuration](PC01%20DHCP%20configuration.png) | Client DHCP settings |
+| [PC01 Network Configuration](PC01%20net%20config.png) | Windows 10 client network configuration |
 
 Screenshots are stored alongside this README and should be referenced using their actual filenames.
 
