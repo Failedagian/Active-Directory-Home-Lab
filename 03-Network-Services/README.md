@@ -1,28 +1,36 @@
  Network Services Configuration
 
- Overview
+ Project Overview
 
 Configured network services for a simulated small business environment using Windows Server 2022 and Windows 10 Pro in Oracle VirtualBox.
 
-The objective was to establish communication between a domain controller (DC01) and a domain-joined client (PC01), using centralised DNS and DHCP services.
+The environment consists of a domain controller (DC01) and a Windows 10 client (PC01), connected through an isolated virtual network.
 
- 1. Network Topology
+The project focuses on three areas:
+
+- IPv4 addressing and network connectivity
+- DNS configuration and domain name resolution
+- DHCP installation, scope management and automatic IP allocation
+
+ 1. Network Architecture
 
 | Component | Configuration |
 |---|---|
-| Virtualisation platform | Oracle VirtualBox |
-| Network type | Internal Network |
+| Virtualisation | Oracle VirtualBox |
+| Network mode | Internal Network |
 | Network name | ADLabNet |
-| Network subnet | 192.168.50.0/24 |
-| Domain controller | DC01 |
-| Client computer | PC01 |
-| Active Directory domain | adlab.test |
+| Network address | 192.168.50.0/24 |
+| Domain | adlab.test |
+| Domain controller | DC01, Windows Server 2022 |
+| Client | PC01, Windows 10 Pro |
 
-Both virtual machines were connected to the same isolated VirtualBox network.
+Both virtual machines use the same internal network, allowing communication without connecting the lab directly to the physical home network.
 
-This arrangement allowed the virtual machines to communicate without relying on the physical home network.
+No router or default gateway was configured.
 
- 2. Static IP Configuration
+## 2. IP Addressing
+
+### Domain Controller: DC01
 
 Configured DC01 with a static IPv4 address.
 
@@ -30,135 +38,207 @@ Configured DC01 with a static IPv4 address.
 |---|---|
 | IPv4 address | 192.168.50.10 |
 | Subnet mask | 255.255.255.0 |
-| Default gateway | Not configured |
-| Preferred DNS server | 192.168.50.10 |
+| Default gateway | None |
+| Preferred DNS | 192.168.50.10 |
 
-A static address was necessary because DC01 provides DNS and other domain services. Client computers require a consistent address to locate these services.
+The domain controller requires a consistent IP address because clients depend on its DNS and Active Directory services.
 
-No default gateway was configured because the lab operates on an isolated internal network without external routing.
+The static address also falls outside the DHCP allocation range, reducing the risk of address conflicts.
 
- 3. DNS Configuration
+### Client: PC01
 
-Installed the DNS Server role alongside Active Directory Domain Services.
+PC01 initially used the manually configured address `192.168.50.20`.
 
-DNS provides name resolution and helps domain clients locate Active Directory services.
+After installing DHCP, the client's Ethernet adapter was changed to obtain IPv4 and DNS settings automatically.
 
-Configuration:
+The DHCP lease details require final verification.
 
-- DNS server: DC01
-- DNS server address: 192.168.50.10
-- Domain: adlab.test
+## 3. DNS Configuration
 
- Verification
+### Implementation
 
-Tested DNS resolution using PowerShell:
+Installed the DNS Server role alongside Active Directory Domain Services on DC01.
+
+Configured the Active Directory DNS zone:
+
+`adlab.test`
+
+DC01 uses `192.168.50.10` as its DNS server address.
+
+DNS supports domain operations by resolving hostnames and allowing clients to locate Active Directory services.
+
+### Testing
+
+Executed the following command in PowerShell:
 
 ```powershell
 Resolve-DnsName -Name adlab.test -Server 192.168.50.10 -DnsOnly
 ```
 
-The command successfully returned DNS resolution results for the domain.
+**Result:** The DNS server successfully returned records for `adlab.test`.
 
-This confirmed the DNS server responded to the domain lookup.
+This confirmed basic domain DNS resolution.
 
- 4. DHCP Configuration
+The test did not independently verify every DNS record or Active Directory service.
 
-Configured the DHCP Server role on DC01 to provide automatic IPv4 configuration for client devices.
+## 4. DHCP Server Configuration
 
-DHCP reduces manual configuration and helps maintain consistent network settings.
+### Installation
 
- Configuration
+The DHCP management console was initially unavailable in Server Manager.
 
-- DHCP server: DC01
-- Network: 192.168.50.0/24
-- DHCP scope: [Add configured scope name]
-- Address allocation range: [Add actual start and end addresses]
-- DNS server option: [Verify configured value]
-- DNS domain option: [Verify configured value]
+Inspection of the installed server roles confirmed that DHCP Server had not been installed.
 
-PC01 was changed from manual IPv4 configuration to automatic address assignment.
+Installed the DHCP Server role on DC01 and completed the post-installation configuration.
 
- Verification
+The wizard confirmed:
 
-The client was configured to obtain its IP address through DHCP.
+- DHCP security groups created successfully.
+- DHCP server authorised successfully in Active Directory.
 
-The following command provides the details needed to verify the lease:
+### DHCP Scope
+
+Created and activated the following IPv4 scope:
+
+| Setting | Value |
+|---|---|
+| Scope name | ADLab-Client-Scope |
+| Network | 192.168.50.0/24 |
+| Start address | 192.168.50.100 |
+| End address | 192.168.50.200 |
+| Subnet mask | 255.255.255.0 |
+| Lease duration | 8 days |
+| Default gateway | None |
+| DNS server entered | 192.168.50.10 |
+| Parent DNS domain entered | adlab.test |
+| WINS | Not configured |
+| Scope status | Active |
+
+The allocation pool contains 101 IPv4 addresses.
+
+The range starts at `.100`, leaving lower addresses available for infrastructure requiring static configuration.
+
+No exclusions were added because DC01's static address, `192.168.50.10`, is outside the DHCP pool.
+
+### Server-Side Verification
+
+Opened DHCP Manager and inspected the configured scope.
+
+Confirmed:
+
+- The scope was active.
+- The address pool started at `192.168.50.100`.
+- The address pool ended at `192.168.50.200`.
+
+These checks established that the DHCP scope was configured and enabled.
+
+## 5. Client Configuration and Verification
+
+### Initial Configuration
+
+PC01 was originally configured with a static IPv4 address:
+
+`192.168.50.20`
+
+The `ipconfig /all` output showed:
+
+`DHCP Enabled: No`
+
+This indicated that PC01 was not requesting its IP address through DHCP.
+
+### Configuration Change
+
+Opened the Windows 10 Ethernet adapter's IPv4 properties and selected:
+
+- Obtain an IP address automatically.
+- Obtain DNS server address automatically.
+
+### Verification Command
 
 ```powershell
 ipconfig /all
 ```
 
-The output should identify the assigned IPv4 address, DHCP server, DNS server and DHCP-enabled status.
+The following values must be confirmed from the updated output:
 
-The exact lease details will be added after verification.
+| Field | Expected result |
+|---|---|
+| DHCP Enabled | Yes |
+| IPv4 address | 192.168.50.100–200 |
+| DHCP server | 192.168.50.10 |
+| DNS server | 192.168.50.10 |
 
- 5. Client Connectivity and Domain Integration
+**Status:** Client adapter settings changed. Successful DHCP lease assignment has not yet been independently confirmed in the documented results.
 
-PC01 was configured as a Windows 10 Pro client on the ADLabNet internal network.
+## 6. Troubleshooting
 
-The client initially used a different network configuration, which required correction before domain integration.
+### Issue 1: Incorrect VirtualBox Network Mode
 
-After configuring the network and DNS settings, PC01 successfully joined the `adlab.test` domain.
+**Symptom:** PC01 initially used a NAT network address (`10.0.2.15`) instead of an address on the intended lab subnet.
 
- Verification performed
+**Investigation:** Inspected the VirtualBox network adapter settings and Windows IP configuration.
 
-- Confirmed both virtual machines used the same VirtualBox internal network.
-- Verified the domain DNS lookup.
-- Successfully joined PC01 to the domain.
-- Used domain credentials to sign in to PC01.
+**Resolution:** Changed the network attachment to Internal Network (`ADLabNet`) and configured the client to use the lab network and DC01's DNS service.
 
-These tests provided evidence of basic client-to-domain connectivity and authentication.
+**Verification:** PC01 subsequently joined `adlab.test` successfully.
 
- 6. Troubleshooting: Incorrect Network Adapter Configuration
+### Issue 2: DHCP Console Missing
 
- Problem
+**Symptom:** DHCP was not available under Server Manager → Tools.
 
-PC01 initially used a NAT network configuration rather than the intended isolated internal network.
+**Investigation:** Checked the installed Windows Server roles and found DHCP Server was not installed.
 
-This prevented the client from using the intended lab network configuration.
+**Resolution:** Installed DHCP Server, completed Active Directory authorisation and created an IPv4 scope.
 
- Investigation
+**Verification:** DHCP Manager became available, and the new scope displayed an Active status.
 
-Reviewed the VirtualBox network adapter settings and the client's IPv4 and DNS configuration.
+### Issue 3: PC01 Not Using DHCP
 
-The client initially had an address on the VirtualBox NAT network (`10.0.2.15`), rather than the intended `192.168.50.0/24` subnet.
+**Symptom:** `ipconfig /all` displayed `DHCP Enabled: No`, with the static address `192.168.50.20`.
 
- Resolution
+**Cause:** The client's Ethernet adapter was configured for manual IPv4 addressing.
 
-Changed the VirtualBox network adapter attachment to Internal Network and selected `ADLabNet`.
+**Resolution:** Changed IPv4 and DNS configuration to automatic assignment.
 
-Configured the client to use the domain controller's DNS service.
+**Verification:** Pending confirmation of the DHCP lease details.
 
- Result
+## 7. Configuration Evidence
 
-PC01 successfully joined `adlab.test` after the network configuration was corrected.
+| Screenshot | Description |
+|---|---|
+| 01-DC01-Static-IP.png | Domain controller IP configuration |
+| 02-VirtualBox-Network.png | Internal network adapter settings |
+| 03-DNS-Configuration.png | Active Directory DNS zone |
+| 04-DNS-Test.png | Successful DNS lookup |
+| 05-DHCP-Scope.png | DHCP allocation range |
+| 06-PC01-DHCP-Configuration.png | Windows 10 DHCP client settings |
 
- 7. Evidence
+Screenshots are stored alongside this README and should be referenced using their actual filenames.
 
-Screenshots included in this directory document:
+## 8. Results and Next Steps
 
-- VirtualBox network adapter configuration
-- DC01 static IPv4 settings
-- DNS server configuration
-- DHCP scope configuration
-- PC01 network configuration
-- DNS resolution test results
+### Completed
 
- 8. Skills Demonstrated
+- Established an isolated VirtualBox network.
+- Configured DC01 with a static IPv4 address.
+- Installed and configured DNS for the Active Directory domain.
+- Successfully tested basic DNS resolution.
+- Installed and authorised DHCP Server.
+- Created and activated an IPv4 DHCP scope.
+- Verified the DHCP address pool.
+- Changed PC01 to automatic IPv4 and DNS configuration.
+- Successfully joined PC01 to the Active Directory domain.
 
-- IPv4 addressing and subnet configuration
-- Static and dynamic IP address assignment
-- Windows Server DNS and DHCP administration
-- VirtualBox internal network configuration
-- Windows client network troubleshooting
-- PowerShell network diagnostics
-- Active Directory client connectivity
+### Outstanding Verification
 
- Further Verification
+Confirm that PC01 receives an IPv4 lease from `192.168.50.10`, with the expected DNS settings.
 
-The following details require confirmation before the network documentation is considered complete:
+Once verified, record the assigned address and lease information, and update the DHCP testing result.
 
-- DHCP scope name and allocation range
-- DHCP options configured on DC01
-- PC01's assigned DHCP lease
-- Evidence of successful DHCP assignment from DC01
+## Key Learning
+
+This project reinforced the relationship between IP addressing, DNS, DHCP and Active Directory.
+
+The troubleshooting process demonstrated the importance of checking both server-side configuration and client-side network settings.
+
+Configuring a service is only one part of administration. Testing its behaviour from a client provides stronger evidence that the service operates as intended.
