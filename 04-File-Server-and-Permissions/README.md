@@ -112,7 +112,7 @@ Verified the configured permissions using `Get-SmbShareAccess`.
 
 NTFS permissions govern file-system access, while SMB permissions govern network share access. Both permission layers contribute to the effective access available through a shared folder.
 
-[View SMB Share Permissions](SMB-Share%20Permissions%20Verification.png)
+[View SMB Share Permissions](05-SMB-Shares.png)
 
 ## 4. Testing and Verification
 
