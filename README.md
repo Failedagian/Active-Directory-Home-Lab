@@ -38,7 +38,7 @@ The project focuses on centralised identity management, network services, depart
 - Use PowerShell for administrative and verification tasks.
 - Test configurations and document troubleshooting results.
 
-- <img width="1752" height="897" alt="image" src="https://github.com/user-attachments/assets/b225e574-cef0-4087-a4aa-c6f35db17800" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/583f4d0b-b876-4301-8512-702820decc57" />
 
 
 ## 2. Business Scenario
