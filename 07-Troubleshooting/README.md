@@ -100,7 +100,7 @@ The available evidence confirms forward resolution rather than independently pro
 
 **Evidence: SMB share permissions**
 
-![SMB Share Permission Verification](../04-File-Server-and-Permissions/SMB-Share%20Permissions%20Verification.png)
+![SMB Share Permission Verification](../04-File-Server-and-Permissions/05-SMB-Shares.png)
 
 ### Issue 05: Unintended NTFS Permission Inheritance
 
