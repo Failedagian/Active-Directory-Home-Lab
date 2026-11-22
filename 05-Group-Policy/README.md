@@ -170,7 +170,7 @@ Confirmed each departmental account received only its assigned drive and departm
 
 **Result: RESOLVED**
 
-**Evidence:** [Original Network Drive Mapping Issue](Mapped-Drive-Network-Verification%281%29.png)
+**Evidence:** [Original Network Drive Mapping Issue](Mapped-Drive-Network-Verification.png)
 
 This investigation demonstrated the importance of understanding GPO inheritance and scope, recognising persistent network connections and validating policy application from the client workstation.
 
