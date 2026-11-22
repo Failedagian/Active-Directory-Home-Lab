@@ -125,14 +125,8 @@ Detailed implementation procedures, configuration screenshots, verification resu
 
 PowerShell and Windows command-line utilities were used for manual configuration, administration, diagnostics and verification. Automation scripting is planned as a separate future extension.
 
-## 6. Limitations and Future Improvements
+## 6.  Future Improvements
 
-### Current Limitations
-
-- The environment contains one domain controller and one client workstation, without server redundancy.
-- Windows Server evaluation software is used for educational purposes.
-- IT and Staff retain inherited `BUILTIN\Users` NTFS entries. Departmental SMB permissions provide separate network access restrictions.
-- Forward DNS resolution was verified successfully. A later client-side reverse lookup received no DNS server response, leaving that diagnostic check unresolved.
 
 ### Future Improvements
 
