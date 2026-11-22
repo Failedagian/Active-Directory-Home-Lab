@@ -99,7 +99,7 @@ Troubleshooting formed an important part of this project. Six technical incident
 
 **Before correction:** The Sales account received all three mapped drives, S:, I: and T:.
 
-![Incorrect Network Drive Mapping](05-Group-Policy/Mapped-Drive-Network-Verification%282%29.png)
+![Incorrect Network Drive Mapping](05-Group-Policy/Mapped-Drive-Network-Verification.png)
 
 **After correction:** The Sales account received only its assigned S: drive.
 
