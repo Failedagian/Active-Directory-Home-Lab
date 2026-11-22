@@ -167,7 +167,7 @@ All three departments received their intended GPO and network drive.
 
 The Sales account received S:, I: and T: due to incorrect GPO application.
 
-![Incorrect Network Drive Mappings](../05-Group-Policy/Mapped-Drive-Network-Verification%282%29.png)
+![Incorrect Network Drive Mappings](../05-Group-Policy/Mapped-Drive-Network-Verification.png)
 
 **After correction:**
 
